@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Techia — email verified</title>
+<style>
+  :root{ color-scheme:dark; }
+  body{
+    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:#191715; color:#f0ebe3; font-family:Inter,-apple-system,"Segoe UI",Arial,sans-serif; padding:20px;
+  }
+  .card{
+    max-width:380px; width:100%; text-align:center; padding:32px 26px;
+    background:#221f1c; border:1px solid rgba(255,255,255,.08); border-radius:14px;
+  }
+  .icon{ font-size:40px; margin-bottom:10px; }
+  h1{ font-size:20px; margin:0 0 8px; }
+  p{ font-size:14px; line-height:1.55; color:#b8b0a6; margin:0; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon" id="icon">✅</div>
+    <h1 id="title">Email verified</h1>
+    <p id="msg">You're all set. Close this tab, go back to Techia, and log in with your email and password.</p>
+  </div>
+<script>
+  // Supabase sends the person here after they click the link in their
+  // verification email. On success it appends session tokens to the URL
+  // hash; on a bad/expired/already-used link it appends error details
+  // instead. This page never uses the tokens — it only reads the error (if
+  // any) to pick the message, then strips the hash so tokens don't linger in
+  // the address bar or browser history.
+  (function(){
+    var params = new URLSearchParams(location.hash.replace(/^#/, ""));
+    if(params.get("error") || params.get("error_code")){
+      document.getElementById("icon").textContent = "⚠️";
+      document.getElementById("title").textContent = "That link didn't work";
+      document.getElementById("msg").textContent =
+        "It may have expired or already been used. Go back to Techia, try logging in — if it says your email isn't verified, tap \"Resend verification email\" and use the newest link.";
+    }
+    if(location.hash) history.replaceState(null, "", location.pathname + location.search);
+  })();
+</script>
+</body>
+</html>
